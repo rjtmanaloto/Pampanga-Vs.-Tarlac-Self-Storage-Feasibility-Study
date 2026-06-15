@@ -1,4 +1,4 @@
-<h1>Pampanga-vs.-Tarlac-Self-Storage-Feasibility-Study</h1>
+<h1>Pampanga Vs. Tarlac: Self Storage Feasibility Study</h1>
 
 
 <h2>Goal</h2>
