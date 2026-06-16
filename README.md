@@ -43,15 +43,38 @@ As a sales analyst/strategic consultant, analyze the market to open a new Storag
 <h2>Screenshots</h2>
 
 <p align="center">
-Raw Data<br/>
-<img width="856" height="451" alt="2" src="https://github.com/user-attachments/assets/752020fb-750a-486b-90ac-63adfbb4eaf4" />
-<p align="center">
-Cleaned Data<br/>
-<img width="856" height="451" alt="3" src="https://github.com/user-attachments/assets/f3932bd9-48db-4f82-aff2-6d2d26335e8d" />
-<p align="center">
-Pivot Tables<br/>
-<img width="856" height="451" alt="4" src="https://github.com/user-attachments/assets/e3ec2548-8dbc-4359-af89-88708c3ada68" />
-<p align="center">
 Dashboard<br/>
-<img width="856" height="451" alt="5" src="https://github.com/user-attachments/assets/8e8e9736-ad4b-4fd9-9be0-ad1f86d041b4" />
+<img width="960" height="2343" alt="Dashboard" src="https://github.com/user-attachments/assets/e9a815b6-be4a-48d6-bf24-981f3aa3f1e6" />
+<p align="center">
+Infographic<br/>
+<img width="960" height="1891" alt="Infographic 1" src="https://github.com/user-attachments/assets/fc5f127c-d829-4b6b-8b34-e5409c271461" />
+<p align="center">
+<img width="960" height="2129" alt="Infographic 2" src="https://github.com/user-attachments/assets/4d30d35c-8439-47c3-a1f5-940ca0613d63" />
+<p align="center">
+Powerpoint Presentation<br/>
+<img width="960" height="540" alt="Powerpoint Presentation 01" src="https://github.com/user-attachments/assets/72909ac4-89c0-4159-ae67-7135d040c291" />
+<p align="center">
+<img width="960" height="540" alt="Powerpoint Presentation 02" src="https://github.com/user-attachments/assets/40d9583f-300f-48ad-be37-cf5da5f7bb49" />
+<p align="center">
+<img width="960" height="540" alt="Powerpoint Presentation 03" src="https://github.com/user-attachments/assets/ccfb0885-b0a1-4a87-997f-160df6c4b961" />
+<p align="center">
+<img width="960" height="540" alt="Powerpoint Presentation 04" src="https://github.com/user-attachments/assets/f109a5ff-b858-4cd1-83b9-e8573f006a2a" />
+<p align="center">
+<img width="960" height="540" alt="Powerpoint Presentation 05" src="https://github.com/user-attachments/assets/9c4eea39-0049-4a02-b88e-ca2e27f9ebaa" />
+<p align="center">
+<img width="960" height="540" alt="Powerpoint Presentation 06" src="https://github.com/user-attachments/assets/8d027bb7-c259-47cb-8748-03180dff4e9d" />
+<p align="center">
+<img width="960" height="540" alt="Powerpoint Presentation 07" src="https://github.com/user-attachments/assets/58f38894-c868-47f6-83fe-d9697d6e5de9" />
+<p align="center">
+<img width="960" height="540" alt="Powerpoint Presentation 08" src="https://github.com/user-attachments/assets/a2638f74-49c3-415b-9301-9a28bdbf1632" />
+<p align="center">
+<img width="960" height="540" alt="Powerpoint Presentation 09" src="https://github.com/user-attachments/assets/e6f3c01e-21c7-429b-9451-8b5d29072513" />
+<p align="center">
+<img width="960" height="540" alt="Powerpoint Presentation 10" src="https://github.com/user-attachments/assets/9345ca77-9ae5-434e-84d6-1ecc8d220e58" />
+<p align="center">
+Domain Expansion Logo<br/>
+<img width="681" height="322" alt="Domain Expansion Logo" src="https://github.com/user-attachments/assets/41e55a0f-278c-4aba-93dc-d7c52e2f8c05" />
+<p align="center">
+Storage Building Picture<br/>
+<img width="960" height="566" alt="Storage Building Picture" src="https://github.com/user-attachments/assets/f7563e4e-6abb-4741-9b75-591726472801" />
 <p align="center">
