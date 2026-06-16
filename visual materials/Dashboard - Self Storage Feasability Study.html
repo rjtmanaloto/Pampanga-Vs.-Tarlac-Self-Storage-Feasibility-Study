@@ -1,0 +1,585 @@
+<!-- Chosen Palette: Warm Neutrals & Earthy Accents (Background: #FAF9F6, text: #292524, Accents: Rust #C25934, Sage #7B9075, Navy #2C3E50) -->
+<!-- Application Structure Plan: A centralized, dashboard-style interactive report. It begins with an overarching executive verdict, followed by a 'Market Explorer' allowing the user to toggle between Pampanga and Tarlac to dynamically update KPIs. This is chosen over a linear report to let the investor instantly compare regions. Next, an 'Economic Drivers' section visualizes market friction. Finally, an interactive 'Financial Modeler' lets the user test different occupancy scenarios. This structure prioritizes the investor's core questions: Where to build? Why? And what is the return? -->
+<!-- Visualization & Content Choices: 
+1. Province Comparison -> Goal: Compare -> Interactive KPIs (HTML/JS) & Radar Chart (Chart.js) -> Justification: Allows simultaneous evaluation of 9 qualitative metrics for both provinces. NO SVG. 
+2. Target Market Breakdown -> Goal: Inform/Proportions -> Doughnut Chart (Chart.js) -> Justification: Shows the composition of the addressable market (Renters vs Others). NO SVG.
+3. Market Friction -> Goal: Change/Trend -> Line Chart (Chart.js) -> Justification: Illustrates the widening gap in real estate friction between the two provinces over 3 years. NO SVG.
+4. Financial Scenarios -> Goal: Compare/Interact -> Grouped Bar Chart (Chart.js) -> Justification: Best for comparing Revenue vs OPEX across user-selected scenarios. NO SVG.
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Feasibility Study: Self-Storage in Central Luzon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAF9F6; /* Warm off-white */
+            color: #292524; /* Warm dark gray */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 350px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #E7E5E4;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+        .btn-active {
+            background-color: #2C3E50;
+            color: white;
+            border-color: #2C3E50;
+        }
+        .btn-inactive {
+            background-color: #F5F5F4;
+            color: #57534E;
+            border-color: #D6D3D1;
+        }
+        .text-accent-rust { color: #C25934; }
+        .text-accent-sage { color: #7B9075; }
+        .text-accent-navy { color: #2C3E50; }
+        .bg-accent-rust { background-color: #C25934; }
+        .bg-accent-sage { background-color: #7B9075; }
+        .bg-accent-navy { background-color: #2C3E50; }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">&#x1F4BC;</span>
+                <span class="font-bold text-xl text-stone-800 tracking-tight">Luzon Storage Equities</span>
+            </div>
+            <div class="hidden sm:block text-sm text-stone-500 font-medium">
+                Interactive Feasibility Dashboard
+            </div>
+        </div>
+    </nav>
+
+    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-stone-900 leading-tight mb-4">
+                    Self-Storage Investment Feasibility
+                </h1>
+                <p class="text-lg text-stone-600 leading-relaxed">
+                    A data-driven analysis evaluating the establishment of a sub-&#x20B1;5M self-storage facility in Region III. This dashboard synthesizes demographic trends, market friction, and financial modeling to guide site selection between Pampanga and Tarlac.
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm min-w-[280px]">
+                <div class="text-xs uppercase tracking-widest text-stone-400 font-bold mb-1">Final Verdict</div>
+                <div class="text-2xl font-black text-accent-sage mb-2 flex items-center gap-2">
+                    &#x2714;&#xFE0F; Strong Buy
+                </div>
+                <div class="text-sm text-stone-600">
+                    <strong>Recommended:</strong> Pampanga<br>
+                    <strong>City:</strong> Angeles City<br>
+                    <strong>Target ROI:</strong> 38.5% (3 Years)
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+
+        <!-- SECTION 1: MARKET EXPLORER -->
+        <section id="market-explorer">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-900 mb-2 flex items-center gap-2">&#x1F3D9;&#xFE0F; Market Demographics Explorer</h2>
+                <p class="text-stone-600 max-w-4xl">
+                    This section allows you to interactively compare the core demand drivers of the two target provinces. Demand for standard self-storage is intrinsically linked to population density and the concentration of renters. Select a province below to view its specific metrics and how it scores across 9 feasibility factors.
+                </p>
+            </div>
+
+            <div class="flex justify-center mb-8 gap-4">
+                <button id="btn-pampanga" class="px-8 py-3 rounded-full font-bold transition-colors btn-active border shadow-sm" onclick="setProvince('pampanga')">
+                    Pampanga
+                </button>
+                <button id="btn-tarlac" class="px-8 py-3 rounded-full font-bold transition-colors btn-inactive border shadow-sm" onclick="setProvince('tarlac')">
+                    Tarlac
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card p-6 text-center">
+                    <div class="text-sm font-semibold text-stone-500 uppercase tracking-wider mb-2">Total Population</div>
+                    <div class="text-4xl font-bold text-accent-navy" id="kpi-pop">2.9M</div>
+                    <div class="text-sm text-stone-500 mt-2" id="kpi-pop-sub">Highly urbanized core</div>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="text-sm font-semibold text-stone-500 uppercase tracking-wider mb-2">Pop. Density (sq km)</div>
+                    <div class="text-4xl font-bold text-accent-rust" id="kpi-den">850</div>
+                    <div class="text-sm text-stone-500 mt-2" id="kpi-den-sub">Creates immediate space friction</div>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="text-sm font-semibold text-stone-500 uppercase tracking-wider mb-2">Addressable Renters</div>
+                    <div class="text-4xl font-bold text-accent-sage" id="kpi-rent">145k+</div>
+                    <div class="text-sm text-stone-500 mt-2" id="kpi-rent-sub">Primary target market</div>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <h3 class="text-lg font-bold text-stone-800 mb-1">Feasibility Scorecard Matrix</h3>
+                <p class="text-sm text-stone-500 mb-6">A multi-dimensional evaluation of 9 critical factors. Pampanga generally outscores Tarlac in demand, while Tarlac leads slightly in lease affordability.</p>
+                <div class="chart-container" style="height: 45vh; max-height: 450px;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: ECONOMIC DRIVERS -->
+        <section id="economic-drivers">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-900 mb-2 flex items-center gap-2">&#x1F4C8; Economic & Market Friction</h2>
+                <p class="text-stone-600 max-w-4xl">
+                    A successful storage facility requires a market with immediate, not just speculative, momentum. We track the "Real Estate Friction Index" (a composite of housing costs, land scarcity, and urbanization speed). Higher friction forces residents to seek external storage. The charts below illustrate these driving forces.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="card p-6 flex flex-col">
+                    <h3 class="text-lg font-bold text-stone-800 mb-1">Target Market Composition</h3>
+                    <p class="text-sm text-stone-500 mb-6">Breakdown of potential storage users in the recommended prime location (Angeles City).</p>
+                    <div class="chart-container flex-grow flex items-center justify-center">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-sm text-stone-600 border-t border-stone-100 pt-4">
+                        <strong>Insight:</strong> Apartment dwellers and relocating professionals form the overwhelming majority, validating the decision to build small (1-5 sqm) units rather than large commercial spaces.
+                    </div>
+                </div>
+
+                <div class="card p-6 flex flex-col">
+                    <h3 class="text-lg font-bold text-stone-800 mb-1">Real Estate Friction Trend (3 Yrs)</h3>
+                    <p class="text-sm text-stone-500 mb-6">Tracking the growing need for space. Base Year (Q1 2021) = 100.</p>
+                    <div class="chart-container flex-grow">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-sm text-stone-600 border-t border-stone-100 pt-4">
+                        <strong>Insight:</strong> Pampanga's index has sharply decoupled from Tarlac's. While Tarlac grows horizontally, Pampanga is densifying, making storage a necessity rather than a luxury.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: FINANCIAL MODELER -->
+        <section id="financial-modeler">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-900 mb-2 flex items-center gap-2">&#x1F4B0; Financial Feasibility Modeler</h2>
+                <p class="text-stone-600 max-w-4xl">
+                    Assuming a &#x20B1;4.2M initial CapEx to lease a 300 sqm shell and construct 120 small modular units. Select an occupancy scenario below to dynamically update the stabilized monthly revenue projections and view the resulting financial impact.
+                </p>
+            </div>
+
+            <div class="card p-6">
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button id="btn-cons" class="px-6 py-2 rounded-md font-medium transition-colors border shadow-sm" onclick="setScenario('conservative')">
+                        Conservative (60% Occ.)
+                    </button>
+                    <button id="btn-base" class="px-6 py-2 rounded-md font-medium transition-colors border shadow-sm btn-active" onclick="setScenario('base')">
+                        Base Case (80% Occ.)
+                    </button>
+                    <button id="btn-opt" class="px-6 py-2 rounded-md font-medium transition-colors border shadow-sm" onclick="setScenario('optimistic')">
+                        Optimistic (95% Occ.)
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                    <div class="lg:col-span-2 chart-container" style="height: 350px;">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                    
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <h4 class="text-stone-500 text-xs font-bold uppercase tracking-wider mb-4">Scenario Highlights</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="text-sm text-stone-500">Gross Monthly Revenue</div>
+                                <div class="text-2xl font-bold text-stone-800" id="fin-rev">&#x20B1;201,600</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-stone-500">Monthly OPEX (Inc. Lease)</div>
+                                <div class="text-2xl font-bold text-stone-800" id="fin-opex">&#x20B1;122,000</div>
+                            </div>
+                            <div class="pt-4 border-t border-stone-200">
+                                <div class="text-sm font-bold text-stone-800">Net Monthly Profit</div>
+                                <div class="text-3xl font-black text-accent-sage" id="fin-net">&#x20B1;79,600</div>
+                            </div>
+                            <div class="mt-4 text-sm text-stone-600 bg-white p-3 rounded shadow-sm">
+                                <strong>Break-even:</strong> 48% Occupancy.<br>
+                                <span id="fin-insight">At this rate, capital payback is achieved in 24 months, aligning perfectly with the 3-year horizon.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: RISKS & STRATEGY -->
+        <section id="risks">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-900 mb-2 flex items-center gap-2">&#x26A0;&#xFE0F; Risk Identification & Mitigation</h2>
+                <p class="text-stone-600 max-w-4xl">
+                    Every private equity venture carries risk. Below are the primary threats identified for a self-storage launch in Central Luzon, alongside our required strategic mitigations prior to capital deployment.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card p-6 border-t-4" style="border-top-color: #C25934;">
+                    <div class="text-3xl mb-4">&#x1F3D2;</div>
+                    <h4 class="font-bold text-stone-900 mb-2">Real Estate Lease Risk</h4>
+                    <p class="text-sm text-stone-600 mb-4">Because we are leasing the shell building, the landlord may refuse renewal or severely hike rents after the 3-year initial term.</p>
+                    <div class="bg-stone-50 p-3 rounded text-sm text-stone-800 border-l-2 border-stone-300">
+                        <strong>Mitigation:</strong> Utilize modular, demountable storage partitions. Negotiate a locked lease with a pre-agreed 2-year extension option.
+                    </div>
+                </div>
+                
+                <div class="card p-6 border-t-4" style="border-top-color: #2C3E50;">
+                    <div class="text-3xl mb-4">&#x1F4E2;</div>
+                    <h4 class="font-bold text-stone-900 mb-2">Market Adoption Risk</h4>
+                    <p class="text-sm text-stone-600 mb-4">Outside Metro Manila, paying for personal storage is a relatively new concept. Customer acquisition costs may be initially high.</p>
+                    <div class="bg-stone-50 p-3 rounded text-sm text-stone-800 border-l-2 border-stone-300">
+                        <strong>Mitigation:</strong> Hyper-targeted digital marketing to condo residents in Angeles. Offer "1st Month Free" trials to induce habit formation.
+                    </div>
+                </div>
+
+                <div class="card p-6 border-t-4" style="border-top-color: #7B9075;">
+                    <div class="text-3xl mb-4">&#x1F512;</div>
+                    <h4 class="font-bold text-stone-900 mb-2">Operational Liability</h4>
+                    <p class="text-sm text-stone-600 mb-4">Security breaches, pest damage, or climate-related damage to tenant goods could result in severe brand damage and liability.</p>
+                    <div class="bg-stone-50 p-3 rounded text-sm text-stone-800 border-l-2 border-stone-300">
+                        <strong>Mitigation:</strong> Require mandatory tenant insurance. Allocate 15% of CapEx to enterprise-grade CCTV, access control, and ventilation.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-400 py-8 text-center text-sm mt-12">
+        <p>&copy; 2026 Region III Market Research & Feasibility Study. Internal Confidential.</p>
+    </footer>
+
+    <script>
+        // --- UTILITIES ---
+        // Label wrapping logic as required
+        const wrapText = (text) => {
+            if (typeof text !== 'string') return text;
+            if (text.length <= 16) return text;
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + 1 + words[i].length <= 16) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        };
+        const wrapArray = (arr) => arr.map(item => wrapText(item));
+
+        // Required Tooltip Configuration
+        const customTooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // Palette Colors
+        const colors = {
+            rust: '#C25934',
+            sage: '#7B9075',
+            navy: '#2C3E50',
+            stone500: '#78716C',
+            stone200: '#E7E5E4',
+            stone800: '#292524'
+        };
+
+        // Chart.js Global Defaults
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = colors.stone500;
+        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(41, 37, 36, 0.9)'; // Dark stone
+        Chart.defaults.plugins.tooltip.padding = 10;
+        Chart.defaults.plugins.tooltip.cornerRadius = 8;
+
+        // --- DATA STATE ---
+        const provinceData = {
+            pampanga: {
+                pop: '2.9M', popSub: 'Highly urbanized core',
+                den: '850', denSub: 'Creates immediate space friction',
+                rent: '145k+', rentSub: 'Primary target market',
+                scores: [9, 8, 9, 5, 9, 8, 6, 8, 7]
+            },
+            tarlac: {
+                pop: '1.5M', popSub: 'Steady horizontal growth',
+                den: '490', denSub: 'Lower spatial pressure',
+                rent: '62k+', rentSub: 'Emerging market base',
+                scores: [5, 5, 6, 8, 4, 7, 8, 7, 5]
+            }
+        };
+
+        const financialData = {
+            conservative: { rev: 151200, opex: 115000, net: 36200, strRev: '₱151,200', strOpex: '₱115,000', strNet: '₱36,200', insight: 'Margins are tight, but the facility remains cash-flow positive. Payback extended to 4.5 years.' },
+            base: { rev: 201600, opex: 122000, net: 79600, strRev: '₱201,600', strOpex: '₱122,000', strNet: '₱79,600', insight: 'At this rate, capital payback is achieved in 24 months, aligning perfectly with the 3-year horizon.' },
+            optimistic: { rev: 239400, opex: 128000, net: 111400, strRev: '₱239,400', strOpex: '₱128,000', strNet: '₱111,400', insight: 'Facility operates near capacity. Exceptional ROI; primes the business for a Phase 2 expansion.' }
+        };
+
+        // --- CHART INITIALIZATION ---
+
+        // 1. Radar Chart (Market Explorer)
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        const radarLabels = wrapArray(['Demand Potential', 'Profitability', 'Market Accessibility', 'Lease Affordability', 'Population Density', 'Residential Growth', 'Competition Intensity', 'Future Growth', 'Investment Risk (Inverted)']);
+        
+        const radarChart = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: radarLabels,
+                datasets: [
+                    {
+                        label: 'Pampanga',
+                        data: provinceData.pampanga.scores,
+                        backgroundColor: 'rgba(44, 62, 80, 0.2)', // Navy light
+                        borderColor: colors.navy,
+                        pointBackgroundColor: colors.navy,
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Tarlac',
+                        data: provinceData.tarlac.scores,
+                        backgroundColor: 'rgba(194, 89, 52, 0.1)', // Rust very light
+                        borderColor: colors.rust,
+                        pointBackgroundColor: colors.rust,
+                        borderWidth: 2,
+                        hidden: true // Start hidden to let user toggle or focus
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: customTooltipConfig,
+                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: colors.stone200 },
+                        grid: { color: colors.stone200 },
+                        pointLabels: { font: { size: 11 }, color: colors.stone800 },
+                        suggestedMin: 0,
+                        suggestedMax: 10,
+                        ticks: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 2. Doughnut Chart (Target Market)
+        const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+        new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: wrapArray(['Apartment/Condo Dwellers', 'Relocating Professionals', 'Small E-commerce Biz', 'General Household']),
+                datasets: [{
+                    data: [45, 30, 15, 10],
+                    backgroundColor: [colors.navy, colors.sage, colors.rust, '#D6D3D1'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    tooltip: customTooltipConfig,
+                    legend: { position: 'right', labels: { usePointStyle: true, padding: 15 } }
+                }
+            }
+        });
+
+        // 3. Line Chart (Friction Trend)
+        const ctxLine = document.getElementById('lineChart').getContext('2d');
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: ['Q1 2021', 'Q3 2021', 'Q1 2022', 'Q3 2022', 'Q1 2023', 'Q3 2023', 'Q1 2024'],
+                datasets: [
+                    {
+                        label: 'Pampanga Index',
+                        data: [100, 105, 112, 125, 138, 150, 165],
+                        borderColor: colors.navy,
+                        backgroundColor: colors.navy,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'Tarlac Index',
+                        data: [100, 102, 104, 108, 111, 115, 119],
+                        borderColor: colors.sage,
+                        backgroundColor: colors.sage,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: customTooltipConfig,
+                    legend: { position: 'bottom', labels: { usePointStyle: true } }
+                },
+                scales: {
+                    y: { beginAtZero: false, min: 90, grid: { color: colors.stone200 } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 4. Bar Chart (Financials)
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: wrapArray(['Monthly Revenue', 'Monthly OPEX']),
+                datasets: [{
+                    label: 'Base Case Projections',
+                    data: [financialData.base.rev, financialData.base.opex],
+                    backgroundColor: [colors.navy, colors.rust],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: customTooltipConfig,
+                    legend: { display: false } // Legend not needed for simple bar
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { color: colors.stone200 },
+                        ticks: { callback: function(value) { return '₱' + (value/1000) + 'k'; } }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // --- INTERACTIVITY LOGIC ---
+
+        function setProvince(prov) {
+            // Update Buttons
+            document.getElementById('btn-pampanga').className = prov === 'pampanga' ? 'px-8 py-3 rounded-full font-bold transition-colors border shadow-sm btn-active' : 'px-8 py-3 rounded-full font-bold transition-colors border shadow-sm btn-inactive';
+            document.getElementById('btn-tarlac').className = prov === 'tarlac' ? 'px-8 py-3 rounded-full font-bold transition-colors border shadow-sm btn-active' : 'px-8 py-3 rounded-full font-bold transition-colors border shadow-sm btn-inactive';
+
+            // Update DOM KPIs
+            const data = provinceData[prov];
+            document.getElementById('kpi-pop').innerText = data.pop;
+            document.getElementById('kpi-pop-sub').innerText = data.popSub;
+            document.getElementById('kpi-den').innerText = data.den;
+            document.getElementById('kpi-den-sub').innerText = data.denSub;
+            document.getElementById('kpi-rent').innerText = data.rent;
+            document.getElementById('kpi-rent-sub').innerText = data.rentSub;
+
+            // Update Radar Chart Visibility
+            if(prov === 'pampanga') {
+                radarChart.setDatasetVisibility(0, true);
+                radarChart.setDatasetVisibility(1, false);
+            } else {
+                radarChart.setDatasetVisibility(0, false);
+                radarChart.setDatasetVisibility(1, true);
+            }
+            radarChart.update();
+        }
+
+        function setScenario(scen) {
+            // Update Buttons
+            const btns = ['btn-cons', 'btn-base', 'btn-opt'];
+            const activeClasses = 'px-6 py-2 rounded-md font-medium transition-colors border shadow-sm btn-active';
+            const inactiveClasses = 'px-6 py-2 rounded-md font-medium transition-colors border shadow-sm text-stone-600 bg-white hover:bg-stone-50';
+            
+            document.getElementById('btn-cons').className = scen === 'conservative' ? activeClasses : inactiveClasses;
+            document.getElementById('btn-base').className = scen === 'base' ? activeClasses : inactiveClasses;
+            document.getElementById('btn-opt').className = scen === 'optimistic' ? activeClasses : inactiveClasses;
+
+            // Update DOM Values
+            const data = financialData[scen];
+            document.getElementById('fin-rev').innerText = data.strRev;
+            document.getElementById('fin-opex').innerText = data.strOpex;
+            document.getElementById('fin-net').innerText = data.strNet;
+            document.getElementById('fin-insight').innerText = data.insight;
+
+            // Color logic for Net Profit text based on scenario
+            const netEl = document.getElementById('fin-net');
+            if(scen === 'conservative') netEl.className = 'text-3xl font-black text-accent-rust';
+            else if(scen === 'optimistic') netEl.className = 'text-3xl font-black text-accent-navy';
+            else netEl.className = 'text-3xl font-black text-accent-sage';
+
+            // Update Bar Chart
+            barChart.data.datasets[0].data = [data.rev, data.opex];
+            
+            // Change color slightly based on scenario to give visual feedback
+            if(scen === 'conservative') {
+                barChart.data.datasets[0].backgroundColor = [colors.stone500, colors.rust];
+                barChart.data.datasets[0].label = 'Conservative Projections';
+            } else if (scen === 'optimistic') {
+                barChart.data.datasets[0].backgroundColor = [colors.sage, colors.rust];
+                barChart.data.datasets[0].label = 'Optimistic Projections';
+            } else {
+                barChart.data.datasets[0].backgroundColor = [colors.navy, colors.rust];
+                barChart.data.datasets[0].label = 'Base Case Projections';
+            }
+            
+            barChart.update();
+        }
+
+        // Initialize view
+        setProvince('pampanga'); // Default radar view
+        // Show both temporarily on load so legend renders correctly, then isolate
+        setTimeout(() => {
+            radarChart.setDatasetVisibility(0, true);
+            radarChart.setDatasetVisibility(1, true);
+            radarChart.update();
+        }, 100);
+
+    </script>
+</body>
+</html>
