@@ -22,12 +22,12 @@ As a sales analyst/strategic consultant, analyze the market to open a new Storag
 1. Ask ChatGPT to write the perfect prompt for AI market research along with clarifying questions.
 2. Answer the clarifying questions.
 3. Use the new prompt in Gemini to complete the market research. Make sure to use the "Deep Research" option.
-4. Use the research results to create a webpage, an infographic, and an audio summary using Gemini.
-5. Use Gamma to create a PowerPoint presentation based on the research.
-6. Ask Chatgpt to write the perfect prompt for designing the Domain Extension company logo. 
-7. Use Gemini and the ChatGPT prompt to create the logo. 
-8. Take a screenshot of a specific location in Angeles City, Pampanga, using Google Maps. 
-9. Use Gemini to create a storage building picture based on your Google Maps screenshot.
+4. Use the market research results to create a dashboard, an infographic, and an audio summary using Gemini.
+5. Ask Chatgpt to write the perfect prompt for designing the Domain Extension company logo. 
+6. Use Gemini and the ChatGPT prompt to create the logo. 
+7. Take a screenshot of a specific location in Angeles City, Pampanga using Google Maps. 
+8. Use Gemini to create a storage building picture based on the Google Maps screenshot.
+9. Use Gamma to create a PowerPoint presentation based on the Gemini market research.
 10. Add the logo and storage building picture to the Gamma PowerPoint presentation.
 
 <h2>Tools Used</h2>
@@ -51,6 +51,12 @@ Infographic<br/>
 <p align="center">
 <img width="960" height="2129" alt="Infographic 2" src="https://github.com/user-attachments/assets/4d30d35c-8439-47c3-a1f5-940ca0613d63" />
 <p align="center">
+Domain Expansion Logo<br/>
+<img width="681" height="322" alt="Domain Expansion Logo" src="https://github.com/user-attachments/assets/41e55a0f-278c-4aba-93dc-d7c52e2f8c05" />
+<p align="center">
+Storage Building Picture<br/>
+<img width="960" height="566" alt="Storage Building Picture" src="https://github.com/user-attachments/assets/f7563e4e-6abb-4741-9b75-591726472801" />
+<p align="center">
 Powerpoint Presentation<br/>
 <img width="960" height="540" alt="Powerpoint Presentation 01" src="https://github.com/user-attachments/assets/72909ac4-89c0-4159-ae67-7135d040c291" />
 <p align="center">
@@ -71,10 +77,4 @@ Powerpoint Presentation<br/>
 <img width="960" height="540" alt="Powerpoint Presentation 09" src="https://github.com/user-attachments/assets/e6f3c01e-21c7-429b-9451-8b5d29072513" />
 <p align="center">
 <img width="960" height="540" alt="Powerpoint Presentation 10" src="https://github.com/user-attachments/assets/9345ca77-9ae5-434e-84d6-1ecc8d220e58" />
-<p align="center">
-Domain Expansion Logo<br/>
-<img width="681" height="322" alt="Domain Expansion Logo" src="https://github.com/user-attachments/assets/41e55a0f-278c-4aba-93dc-d7c52e2f8c05" />
-<p align="center">
-Storage Building Picture<br/>
-<img width="960" height="566" alt="Storage Building Picture" src="https://github.com/user-attachments/assets/f7563e4e-6abb-4741-9b75-591726472801" />
 <p align="center">
